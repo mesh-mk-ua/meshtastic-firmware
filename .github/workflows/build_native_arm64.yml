@@ -1,4 +1,4 @@
-name: Build Ubuntu arm64
+name: Build Native arm64
 
 on: workflow_call
 
@@ -7,8 +7,8 @@ permissions:
   packages: write
 
 jobs:
-  build-ubuntu-arm64:
-    runs-on: [ubuntu-latest, ARM64]
+  build-native-arm64:
+    runs-on: [self-hosted, ubuntu, ARM64]
     steps:
       - name: Install libbluetooth
         shell: bash
@@ -45,7 +45,7 @@ jobs:
         run: |
           pio upgrade
 
-      - name: Build Ubuntu
+      - name: Build native arm64
         run: bin/build-native.sh
 
       - name: Get release version string
@@ -55,7 +55,7 @@ jobs:
       - name: Store binaries as an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: firmware-ubuntu-${{ steps.version.outputs.version }}_arm64.zip
+          name: firmware-native-${{ steps.version.outputs.version }}_arm64.zip
           overwrite: true
           path: |
             release/meshtasticd_linux_aarch64

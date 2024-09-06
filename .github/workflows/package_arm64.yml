@@ -1,4 +1,4 @@
-name: Package native arm64
+name: Package Native arm64
 
 on:
   workflow_call:
@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/build_native_arm64.yml
 
   package-native-arm64:
-    runs-on: [ubuntu-latest, ARM64]
+    runs-on: [self-hosted, ubuntu, ARM64]
     needs: build-native-arm64
     steps:
       - name: Checkout code
@@ -66,7 +66,7 @@ jobs:
           package_root: .debpkg
           maintainer: Jonathan Bennett
           version: ${{ steps.version.outputs.version }} # refs/tags/v*.*.*
-          arch: amd64
+          arch: arm64
           depends: libyaml-cpp0.8, openssl, libulfius2.7
           desc: Native Linux Meshtastic binary.
 
