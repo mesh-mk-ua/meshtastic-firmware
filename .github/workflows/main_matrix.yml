@@ -122,6 +122,9 @@ jobs:
   package-native:
     uses: ./.github/workflows/package_amd64.yml
 
+  package-native-arm64:
+    uses: ./.github/workflows/package_arm64.yml
+
   after-checks:
     runs-on: ubuntu-latest
     needs: [check]
@@ -148,6 +151,7 @@ jobs:
         package-raspbian,
         package-raspbian-armv7l,
         package-native,
+        package-native-arm64,
       ]
     steps:
       - name: Checkout code
