@@ -14,10 +14,10 @@ runs:
     - name: Getting custom userPrefs.h
       uses: mobiledevops/secret-to-file-action@v1
       env:
-        USER_PREFS: ${{ secrets.USER_PREFS }}
-      if: ${{ env.USER_PREFS != '' }}
+        USER_PREFS: ${{ inputs.USER_PREFS }}
+      if: ${{ inputs.USER_PREFS != '' }}
       with:
-        base64-encoded-secret: ${{ secrets.USER_PREFS }}
+        base64-encoded-secret: ${{ inputs.USER_PREFS }}
         filename: "userPrefs.h"
       
     - name: Install dependencies
