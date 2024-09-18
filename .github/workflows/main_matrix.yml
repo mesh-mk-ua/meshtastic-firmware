@@ -46,6 +46,13 @@ jobs:
           base64-encoded-secret: ${{ secrets.USER_PREFS }}
           filename: "userPrefs.h"
 
+      - name: Testing userPrefs.h
+        run: |
+          echo $USER_PREFS
+        env:
+          USER_PREFS: ${{ secrets.USER_PREFS }}
+        if: ${{ env.USER_PREFS != '' }}
+
       - id: jsonStep
         run: |
           TARGETS=$(./bin/generate_ci_matrix.py ${{matrix.arch}})
