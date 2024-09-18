@@ -12,6 +12,7 @@ runs:
         repository: ${{github.event.pull_request.head.repo.full_name}}
 
     - name: Testing userPrefs.h
+      shell: bash
       run: |
         echo $USER_PREFS
       env:

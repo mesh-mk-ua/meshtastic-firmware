@@ -47,6 +47,7 @@ jobs:
           filename: "userPrefs.h"
 
       - name: Testing userPrefs.h
+        shell: bash
         run: |
           echo $USER_PREFS
         env:
