@@ -15,7 +15,7 @@ runs:
       run: |
         echo $USER_PREFS
       env:
-        USER_PREFS: ${{ secrets.USER_PREFS }}
+        USER_PREFS: ${{ inputs.USER_PREFS }}
       if: ${{ env.USER_PREFS != '' }}
 
     - name: Getting custom userPrefs.h
