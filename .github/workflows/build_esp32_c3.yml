@@ -38,3 +38,4 @@ jobs:
           artifact-paths: |
             release/*.bin
             release/*.elf
+          arch: esp32c3

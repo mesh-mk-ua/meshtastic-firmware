@@ -29,3 +29,4 @@ jobs:
           artifact-paths: |
             release/*.uf2
             release/*.elf
+          arch: rp2040
