@@ -36,7 +36,7 @@ jobs:
       - id: checkout
         uses: actions/checkout@v4
         name: Checkout base
- 
+
       - name: Getting userPrefs.h
         uses: mobiledevops/secret-to-file-action@v1
         env:
@@ -45,7 +45,7 @@ jobs:
         with:
           base64-encoded-secret: ${{ secrets.USER_PREFS }}
           filename: "userPrefs.h"
-    
+
       - id: jsonStep
         run: |
           if [[ "${{ github.head_ref }}" == "" ]]; then
@@ -279,8 +279,6 @@ jobs:
         package-raspbian-armv7l,
         #package-native,
       ]
-
-    needs: [gather-artifacts]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -357,7 +355,7 @@ jobs:
         with:
           title: Bump version.properties
           add-paths: |
-            version.properties     
+            version.properties
 
   release-firmware:
     strategy:
