@@ -25,6 +25,9 @@ jobs:
 
       - name: Getting userPrefs.h
         uses: mobiledevops/secret-to-file-action@v1
+        env:
+          USER_PREFS: ${{ secrets.USER_PREFS }}
+        if: ${{ env.USER_PREFS != '' }}
         with:
           base64-encoded-secret: ${{ secrets.USER_PREFS }}
           filename: "userPrefs.h"
@@ -32,13 +35,13 @@ jobs:
       - name: Create virtualenv
         run: |
           python3 -m venv ".venv"
-      
+
       - name: Activate virtualenv
         run: |
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
           echo VIRTUAL_ENV=$VIRTUAL_ENV >> $GITHUB_ENV
-          
+
       - name: Upgrade python tools
         shell: bash
         run: |
