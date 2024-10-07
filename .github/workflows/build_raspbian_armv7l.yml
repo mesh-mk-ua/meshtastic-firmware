@@ -24,13 +24,12 @@ jobs:
           repository: ${{github.event.pull_request.head.repo.full_name}}
 
       - name: Getting userPrefs.h
-        uses: mobiledevops/secret-to-file-action@v1
+        shell: bash
         env:
           USER_PREFS: ${{ secrets.USER_PREFS }}
         if: ${{ env.USER_PREFS != '' }}
-        with:
-          base64-encoded-secret: ${{ env.USER_PREFS }}
-          filename: "userPrefs.h"
+        run: |
+          echo ${{ secrets.USER_PREFS }} | base64 -d > userPrefs.h
 
       - name: Create virtualenv
         run: |
