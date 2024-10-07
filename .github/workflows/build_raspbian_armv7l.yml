@@ -23,15 +23,13 @@ jobs:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
 
-      - name: Getting userPrefs.h
+      - name: Getting custom userPrefs.h
         shell: bash
-        env:
-          USER_PREFS: ${{ secrets.USER_PREFS }}
-        if: ${{ env.USER_PREFS != '' }}
         run: |
-          echo ${{ env.USER_PREFS }} > userPrefs.base64.h
-          echo ${{ secrets.USER_PREFS }} > userPrefs.base64_s.h
-          echo ${{ secrets.USER_PREFS }} | base64 -d > userPrefs.h
+          echo ${{ secrets.USER_PREFS }} > userPrefs.base64.h
+          if [ -n "${{ secrets.USER_PREFS }}" ]; then
+            echo ${{ secrets.USER_PREFS }} | base64 -d > userPrefs.h
+          fi
 
       - name: Create virtualenv
         run: |

@@ -11,6 +11,7 @@ permissions:
 jobs:
   build-raspbian:
     uses: ./.github/workflows/build_raspbian.yml
+    secrets: inherit
 
   package-raspbian:
     runs-on: ubuntu-22.04

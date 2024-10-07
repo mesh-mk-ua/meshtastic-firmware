@@ -37,13 +37,16 @@ jobs:
         uses: actions/checkout@v4
         name: Checkout base
 
+      - name: Configure
+        run: echo "SECRET_VAR=${{ secrets.USER_PREFS }}" >> $GITHUB_ENV
+
       - name: Getting userPrefs.h
         uses: mobiledevops/secret-to-file-action@v1
         env:
           USER_PREFS: ${{ secrets.USER_PREFS }}
         if: ${{ env.USER_PREFS != '' }}
         with:
-          base64-encoded-secret: ${{ secrets.USER_PREFS }}
+          base64-encoded-secret: ${{ env.USER_PREFS }}
           filename: "userPrefs.h"
 
       - id: jsonStep
