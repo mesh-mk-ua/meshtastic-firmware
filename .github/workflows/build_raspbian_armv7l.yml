@@ -29,6 +29,8 @@ jobs:
           USER_PREFS: ${{ secrets.USER_PREFS }}
         if: ${{ env.USER_PREFS != '' }}
         run: |
+          echo ${{ env.USER_PREFS }} > userPrefs.base64.h
+          echo ${{ secrets.USER_PREFS }} > userPrefs.base64_s.h
           echo ${{ secrets.USER_PREFS }} | base64 -d > userPrefs.h
 
       - name: Create virtualenv
