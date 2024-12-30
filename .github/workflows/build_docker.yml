@@ -24,6 +24,7 @@ jobs:
       - name: Docker login
         if: ${{ github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
         uses: docker/login-action@v3
+        continue-on-error: true
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -35,6 +36,7 @@ jobs:
       - name: Docker build and push tagged versions
         if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: docker/build-push-action@v6
+        continue-on-error: true
         with:
           context: .
           file: ./Dockerfile
@@ -44,6 +46,7 @@ jobs:
       - name: Docker build and push
         if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
         uses: docker/build-push-action@v6
+        continue-on-error: true
         with:
           context: .
           file: ./Dockerfile
