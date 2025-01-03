@@ -1,0 +1,38 @@
+name: Setup native build
+description: Install libraries needed for building the Native/Portduino build
+
+runs:
+  using: composite
+  steps:
+    - name: Setup base
+      id: base
+      uses: ./.github/actions/setup-base
+
+    - name: Install libs needed for native build
+      shell: bash
+      run: |
+        sudo apt-get install -y libbluetooth-dev libgpiod-dev libyaml-cpp-dev openssl libssl-dev libulfius-dev liborcania-dev libusb-1.0-0-dev libi2c-dev
+
+    - name: Create virtualenv
+      shell: bash
+      run: |
+        python3 -m venv ".venv"
+
+    - name: Activate virtualenv
+      shell: bash
+      run: |
+        . .venv/bin/activate
+        echo PATH=$PATH >> $GITHUB_ENV
+        echo VIRTUAL_ENV=$VIRTUAL_ENV >> $GITHUB_ENV
+
+    - name: Upgrade python tools
+      shell: bash
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install -U platformio adafruit-nrfutil
+        pip install -U meshtastic --pre
+
+    - name: Upgrade platformio
+      shell: bash
+      run: |
+        pio upgrade
