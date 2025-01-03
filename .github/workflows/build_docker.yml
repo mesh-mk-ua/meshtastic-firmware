@@ -47,7 +47,7 @@ jobs:
           file: ./Dockerfile
           push: false
           tags: |
-            ${{ github.repository_owner }}/meshtastic:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/meshtastic:${{ steps.version.outputs.version }}
             ${{ vars.DOCKERHUB_USERNAME }}/meshtastic:${{ steps.version.outputs.version }}
 
       - name: Docker build and push tagged versions
@@ -59,7 +59,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ github.repository_owner }}/meshtastic:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/meshtastic:${{ steps.version.outputs.version }}
             ${{ vars.DOCKERHUB_USERNAME }}/meshtastic:${{ steps.version.outputs.version }}
 
       - name: Docker build and push
@@ -71,5 +71,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ github.repository_owner }}/mestastic:latest
+            ghcr.io/${{ github.repository_owner }}/mestastic:latest
             ${{ vars.DOCKERHUB_USERNAME }}/mestastic:latest
