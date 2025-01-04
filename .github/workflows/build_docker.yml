@@ -40,11 +40,11 @@ jobs:
         if: ${{ github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
         uses: docker/setup-buildx-action@v3
 
-      - name: Docker build tagged versions
+      - name: Docker build tagged versions linux/amd64
         if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64,linux/arm64,linux/arm
+          platforms: linux/amd64
           context: .
           file: ./Dockerfile
           push: false
@@ -52,12 +52,36 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
             ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
 
-      - name: Docker build and push tagged versions
+      - name: Docker build tagged versions linux/arm64
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/arm64
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
+
+      - name: Docker build tagged versions linux/arm
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/arm
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
+
+      - name: Docker build and push tagged versions linux/amd64
         if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: docker/build-push-action@v6
         continue-on-error: true
         with:
-          platforms: linux/amd64,linux/arm64,linux/arm
+          platforms: linux/amd64
           context: .
           file: ./Dockerfile
           push: true
@@ -65,12 +89,64 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
             ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
 
-      - name: Docker build and push
+      - name: Docker build and push tagged versions linux/arm64
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: docker/build-push-action@v6
+        continue-on-error: true
+        with:
+          platforms: linux/arm64
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
+
+      - name: Docker build and push tagged versions linux/arm
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: docker/build-push-action@v6
+        continue-on-error: true
+        with:
+          platforms: linux/arm
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
+
+      - name: Docker build and push linux/amd64
         if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
         uses: docker/build-push-action@v6
         continue-on-error: true
         with:
-          platforms: linux/amd64,linux/arm64,linux/arm
+          platforms: linux/amd64
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:latest
+
+      - name: Docker build and push linux/arm64
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
+        uses: docker/build-push-action@v6
+        continue-on-error: true
+        with:
+          platforms: linux/arm64
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:latest
+
+      - name: Docker build and push linux/arm
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
+        uses: docker/build-push-action@v6
+        continue-on-error: true
+        with:
+          platforms: linux/arm
           context: .
           file: ./Dockerfile
           push: true
