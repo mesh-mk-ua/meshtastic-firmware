@@ -22,8 +22,8 @@ WORKDIR /tmp/firmware
 COPY . /tmp/firmware
 
 # Build
-RUN bash ./bin/build-native.sh && \
-    cp "/tmp/firmware/release/meshtasticd_linux_$(uname -m)" "/tmp/firmware/release/meshtasticd"
+RUN bash ./bin/build-native.sh
+RUN cp "/tmp/firmware/release/meshtasticd_linux_$(uname -m)" "/tmp/firmware/release/meshtasticd"
 
 
 ##### PRODUCTION BUILD #############
