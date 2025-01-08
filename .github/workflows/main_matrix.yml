@@ -160,9 +160,17 @@ jobs:
   test-native:
     uses: ./.github/workflows/test_native.yml
 
-  build-docker:
+  build-docker-amd64:
     #if: ${{ github.event_name == 'workflow_dispatch' || }}
-    uses: ./.github/workflows/build_docker.yml
+    uses: ./.github/workflows/build_docker_amd64.yml
+    secrets: inherit
+
+  build-docker-arm:
+    uses: ./.github/workflows/build_docker_arm.yml
+    secrets: inherit
+
+  build-docker-arm64:
+    uses: ./.github/workflows/build_docker_arm64.yml
     secrets: inherit
 
   after-checks:
