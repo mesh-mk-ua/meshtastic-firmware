@@ -160,9 +160,17 @@ jobs:
   test-native:
     uses: ./.github/workflows/test_native.yml
 
-  build-docker:
+  build-docker-amd64:
     #if: ${{ github.event_name == 'workflow_dispatch' || }}
-    uses: ./.github/workflows/build_docker.yml
+    uses: ./.github/workflows/build_docker_amd64.yml
+    secrets: inherit
+
+  build-docker-arm:
+    uses: ./.github/workflows/build_docker_arm.yml
+    secrets: inherit
+
+  build-docker-arm64:
+    uses: ./.github/workflows/build_docker_arm64.yml
     secrets: inherit
 
   after-checks:
@@ -361,6 +369,10 @@ jobs:
           asset_name: meshtasticd_${{ steps.version.outputs.version }}_ubuntu_arm64.deb
           asset_content_type: application/vnd.debian.binary-package
 
+      - name: Update debian changelog
+        run: >-
+          debian/ci_changelog.sh
+
       #- name: Bump version.properties
       #  run: >-
       #    bin/bump_version.py
@@ -372,6 +384,7 @@ jobs:
       #    title: Bump version.properties
       #    add-paths: |
       #      version.properties
+      #      debian/changelog
 
   release-firmware:
     strategy:

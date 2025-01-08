@@ -13,9 +13,8 @@ ENV PIP_ROOT_USER_ACTION=ignore
 RUN apt-get update && apt-get install --no-install-recommends -y wget g++ zip git ca-certificates \
         libgpiod-dev libyaml-cpp-dev libbluetooth-dev libi2c-dev \
         libusb-1.0-0-dev libulfius-dev liborcania-dev libssl-dev pkg-config && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    pip install --no-cache-dir -U platformio==6.1.16 && \
-    mkdir /tmp/firmware
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir -U platformio==6.1.16
 
 # Copy source code
 WORKDIR /tmp/firmware
@@ -35,10 +34,9 @@ ENV TZ=Etc/UTC
 # nosemgrep: dockerfile.security.last-user-is-root.last-user-is-root
 USER root
 
-RUN apt-get update && apt-get --no-install-recommends -y install libc-bin libc6 libgpiod2 libyaml-cpp0.7 libi2c0 libulfius2.7 libusb-1.0-0-dev liborcania2.3 libssl3 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /var/lib/meshtasticd \
-    && mkdir -p /etc/meshtasticd/config.d
+RUN apt-get update && apt-get --no-install-recommends -y install libc-bin libc6 libgpiod2 libyaml-cpp0.8 libi2c0 libulfius2.7 libusb-1.0-0-dev liborcania2.3 libssl3 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /var/lib/meshtasticd /etc/meshtasticd/config.d
 
 # Fetch compiled binary from the builder
 COPY --from=builder /tmp/firmware/release/meshtasticd /usr/sbin/
