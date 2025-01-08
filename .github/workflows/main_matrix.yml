@@ -369,6 +369,10 @@ jobs:
           asset_name: meshtasticd_${{ steps.version.outputs.version }}_ubuntu_arm64.deb
           asset_content_type: application/vnd.debian.binary-package
 
+      - name: Update debian changelog
+        run: >-
+          debian/ci_changelog.sh
+
       #- name: Bump version.properties
       #  run: >-
       #    bin/bump_version.py
@@ -380,6 +384,7 @@ jobs:
       #    title: Bump version.properties
       #    add-paths: |
       #      version.properties
+      #      debian/changelog
 
   release-firmware:
     strategy:
