@@ -49,13 +49,13 @@ jobs:
         run: bin/build-native.sh
 
       - name: Get release version string
-        run: echo "version=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
+        run: echo "long=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
         id: version
 
       - name: Store binaries as an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: firmware-${{ steps.version.outputs.version }}_ubuntu_arm64.zip
+          name: firmware-${{ steps.version.outputs.long }}_ubuntu_arm64.zip
           overwrite: true
           path: |
             release/meshtasticd_linux_aarch64

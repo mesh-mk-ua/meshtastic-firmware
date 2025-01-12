@@ -18,7 +18,7 @@ jobs:
           repository: ${{github.event.pull_request.head.repo.full_name}}
 
       - name: Get release version string
-        run: echo "version=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
+        run: echo "long=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
         id: version
 
       - name: Login to DockerHub Container Registry
@@ -49,8 +49,8 @@ jobs:
           file: ./Dockerfile
           push: false
           tags: |
-            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
-            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.long }}
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.long }}
 
       - name: Docker build and push tagged versions linux/amd64
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -62,8 +62,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.version }}
-            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd:${{ steps.version.outputs.long }}
+            ${{ vars.DOCKERHUB_USERNAME }}/meshtasticd:${{ steps.version.outputs.long }}
 
       - name: Docker build and push linux/amd64
         if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request_target' && github.event_name != 'pull_request' }}
