@@ -27,6 +27,7 @@
 #include "Sensor/BMP280Sensor.h"
 #include "Sensor/BMP3XXSensor.h"
 #include "Sensor/CGRadSensSensor.h"
+#include "Sensor/DFRobotGravitySensor.h"
 #include "Sensor/DFRobotLarkSensor.h"
 #include "Sensor/LPS22HBSensor.h"
 #include "Sensor/MCP9808Sensor.h"
@@ -56,6 +57,7 @@ RCWL9620Sensor rcwl9620Sensor;
 AHT10Sensor aht10Sensor;
 MLX90632Sensor mlx90632Sensor;
 DFRobotLarkSensor dfRobotLarkSensor;
+DFRobotGravitySensor dfRobotGravitySensor;
 NAU7802Sensor nau7802Sensor;
 BMP3XXSensor bmp3xxSensor;
 CGRadSensSensor cgRadSens;
@@ -115,6 +117,8 @@ int32_t EnvironmentTelemetryModule::runOnce()
 #elif !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR_EXTERNAL
             if (dfRobotLarkSensor.hasSensor())
                 result = dfRobotLarkSensor.runOnce();
+            if (dfRobotGravitySensor.hasSensor())
+                result = dfRobotGravitySensor.runOnce();
             if (bmp085Sensor.hasSensor())
                 result = bmp085Sensor.runOnce();
             if (bmp280Sensor.hasSensor())
@@ -278,8 +282,18 @@ void EnvironmentTelemetryModule::drawFrame(OLEDDisplay *display, OLEDDisplayUiSt
     static bool scrollingDown = true;
     static uint32_t lastScrollTime = millis();
 
-    // Draw up to 3 sensor data lines
-    int linesToShow = min(3, sensorCount);
+    // Determine how many lines we can fit on display
+    // Calculated once only: display dimensions don't change during runtime.
+    static int maxLines = 0;
+    if (!maxLines) {
+        const int16_t paddingTop = _fontHeight(FONT_SMALL); // Heading text
+        const int16_t paddingBottom = 8;                    // Indicator dots
+        maxLines = (display->getHeight() - paddingTop - paddingBottom) / _fontHeight(FONT_SMALL);
+        assert(maxLines > 0);
+    }
+
+    // Draw as many lines of data as we can fit
+    int linesToShow = min(maxLines, sensorCount);
     for (int i = 0; i < linesToShow; i++) {
         int index = (scrollOffset + i) % sensorCount;
         display->drawString(x, y += _fontHeight(FONT_SMALL), sensorData[index]);
@@ -356,6 +370,10 @@ bool EnvironmentTelemetryModule::getEnvironmentTelemetry(meshtastic_Telemetry *m
 #else
     if (dfRobotLarkSensor.hasSensor()) {
         valid = valid && dfRobotLarkSensor.getMetrics(m);
+        hasSensor = true;
+    }
+    if (dfRobotGravitySensor.hasSensor()) {
+        valid = valid && dfRobotGravitySensor.getMetrics(m);
         hasSensor = true;
     }
     if (sht31Sensor.hasSensor()) {
@@ -556,6 +574,11 @@ AdminMessageHandleResult EnvironmentTelemetryModule::handleAdminMessageForModule
 #if !MESHTASTIC_EXCLUDE_ENVIRONMENTAL_SENSOR_EXTERNAL
     if (dfRobotLarkSensor.hasSensor()) {
         result = dfRobotLarkSensor.handleAdminMessage(mp, request, response);
+        if (result != AdminMessageHandleResult::NOT_HANDLED)
+            return result;
+    }
+    if (dfRobotGravitySensor.hasSensor()) {
+        result = dfRobotGravitySensor.handleAdminMessage(mp, request, response);
         if (result != AdminMessageHandleResult::NOT_HANDLED)
             return result;
     }
