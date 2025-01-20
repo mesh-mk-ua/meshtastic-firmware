@@ -350,7 +350,7 @@ jobs:
 
       - name: Add deb files to release
         run: |
-          gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_ubuntu__arm64.deb
+          gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_ubuntu_arm64.deb
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_armhf.deb
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_amd64.deb
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd-${{ steps.version.outputs.deb }}-src.zip
