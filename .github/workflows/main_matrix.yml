@@ -356,9 +356,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update debian changelog
-        run: >-
-          debian/ci_changelog.sh
+      #- name: Update debian changelog
+      #  run: >-
+      #    debian/ci_changelog.sh
 
       #- name: Bump version.properties
       #  run: >-
