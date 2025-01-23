@@ -24,7 +24,7 @@ jobs:
     uses: ./.github/workflows/package_ppa.yml
     with:
       ppa_repo: |-
-        ppa:mymesh/meshtasticd/${{ contains(github.event.release.name, 'Beta') && 'beta' || contains(github.event.release.name, 'Alpha') && 'alpha' }}
+        ppa:mymesh/${{ contains(github.event.release.name, 'Beta') && 'beta' || contains(github.event.release.name, 'Alpha') && 'alpha' }}
       series: ${{ matrix.series }}
     secrets: inherit
 
