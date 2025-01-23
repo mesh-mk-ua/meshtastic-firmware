@@ -31,8 +31,3 @@ runs:
         python3 -m pip install --upgrade pip
         pip install -U platformio adafruit-nrfutil
         pip install -U meshtastic --pre
-
-    - name: Upgrade platformio
-      shell: bash
-      run: |
-        pio upgrade

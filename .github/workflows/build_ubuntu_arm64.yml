@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build-ubuntu-arm64:
-    runs-on: [self-hosted, linux, self-hosted-ubuntu, ARM64]
+    runs-on: [self-hosted, linux, ubuntu-latest, ARM64]
     steps:
       - name: Install libs needed for ubuntu build
         shell: bash
@@ -45,7 +45,7 @@ jobs:
         run: |
           pio upgrade
 
-      - name: Build Ubuntu
+      - name: Build Ubuntu arm64
         run: bin/build-native.sh
 
       - name: Get release version string

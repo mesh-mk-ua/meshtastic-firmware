@@ -43,18 +43,6 @@ runs:
         echo PATH=$PATH >> $GITHUB_ENV
         echo VIRTUAL_ENV=$VIRTUAL_ENV >> $GITHUB_ENV
 
-    - name: Create virtualenv
-      shell: bash
-      run: |
-        python3 -m venv ".venv"
-
-    - name: Activate virtualenv
-      shell: bash
-      run: |
-        . .venv/bin/activate
-        echo PATH=$PATH >> $GITHUB_ENV
-        echo VIRTUAL_ENV=$VIRTUAL_ENV >> $GITHUB_ENV
-
     - name: Upgrade python tools
       shell: bash
       run: |
