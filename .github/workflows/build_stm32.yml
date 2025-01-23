@@ -25,4 +25,3 @@ jobs:
             release/*.bin
             release/*.elf
           arch: stm32
-          USER_PREFS: ${{ secrets.USER_PREFS }}

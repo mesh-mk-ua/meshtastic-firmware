@@ -35,4 +35,3 @@ jobs:
             release/*.elf
           include-web-ui: true
           arch: esp32s3
-          USER_PREFS: ${{ secrets.USER_PREFS }}
