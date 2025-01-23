@@ -2,9 +2,6 @@ name: Build Docker Multi-Arch Manifest
 
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
     inputs:
       release_channel:
         description: Release channel to target
@@ -144,7 +141,7 @@ jobs:
         id: meta_debian
         uses: docker/metadata-action@v5
         with:
-          images: ${{ github.repository_owner }}/meshtasticd
+          images: ghcr.io/${{ github.repository_owner }}/meshtasticd
           tags: ${{ steps.tags.outputs.debian }}
           flavor: latest=false
 

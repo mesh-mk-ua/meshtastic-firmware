@@ -4,9 +4,6 @@ name: Build Docker
 
 on:
   workflow_call:
-    secrets:
-      DOCKER_FIRMWARE_TOKEN:
-        required: false # Only required for push
     inputs:
       distro:
         description: Distro to target
@@ -53,12 +50,12 @@ jobs:
           echo "long=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
         id: version
 
-      - name: Docker login
-        if: ${{ inputs.push }}
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: meshtastic
-          password: ${{ secrets.DOCKER_FIRMWARE_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -75,7 +72,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: meshtastic/meshtasticd
+          images: ghcr.io/${{ github.repository_owner }}/meshtasticd
           tags: |
             GHA-${{ steps.version.outputs.long }}-${{ inputs.distro }}-${{ steps.sanitize_platform.outputs.cleaned_platform }}
           flavor: latest=false
