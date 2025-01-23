@@ -1,4 +1,4 @@
-name: Build Docker ${{ inputs.distro }}
+name: Build Docker
 
 # Build Docker image, push untagged (digest-only)
 
