@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build-native:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, x64]
     steps:
       - name: Checkout code
         if: ${{ !github.event.act }}

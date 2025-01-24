@@ -10,7 +10,7 @@ on:
 
 jobs:
   semgrep-full:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, x64]
     container:
       image: semgrep/semgrep
 

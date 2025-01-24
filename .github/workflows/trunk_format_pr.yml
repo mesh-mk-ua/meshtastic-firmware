@@ -7,7 +7,7 @@ on:
 jobs:
   trunk-fmt:
     if: github.event.issue.pull_request != null && contains(github.event.comment.body, 'trunk fmt')
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, x64]
 
     steps:
       - name: Checkout repository

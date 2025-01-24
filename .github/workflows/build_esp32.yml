@@ -11,7 +11,7 @@ permissions: read-all
 
 jobs:
   build-esp32:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, x64]
     steps:
       - uses: actions/checkout@v4
 
