@@ -33,7 +33,7 @@ jobs:
         series: [plucky, oracular, noble, jammy]
     uses: ./.github/workflows/package_ppa.yml
     with:
-      ppa_repo: ppa:mymesh/meshtasticd/daily
+      ppa_repo: ppa:mymesh/daily
       series: ${{ matrix.series }}
     secrets: inherit
 
