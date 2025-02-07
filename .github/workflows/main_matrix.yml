@@ -128,18 +128,6 @@ jobs:
     with:
       board: ${{ matrix.board }}
 
-  package-ubuntu-arm64:
-    uses: ./.github/workflows/package_ubuntu_arm64.yml
-
-  #package-raspbian:
-  #  uses: ./.github/workflows/package_raspbian.yml
-
-  #package-raspbian-armv7l:
-  #  uses: ./.github/workflows/package_raspbian_armv7l.yml
-
-  package-native:
-    uses: ./.github/workflows/package_amd64.yml
-
   build-debian-src:
     uses: ./.github/workflows/build_debian_src.yml
     with:
@@ -293,10 +281,6 @@ jobs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     needs: [
         gather-artifacts,
-        #package-raspbian,
-        #package-raspbian-armv7l,
-        package-native,
-        package-ubuntu-arm64,
         build-debian-src,
       ]
     steps:
@@ -351,8 +335,6 @@ jobs:
 
       - name: Add deb files to release
         run: |
-          gh release upload --clobber v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_ubuntu_arm64.deb
-          gh release upload --clobber v${{ steps.version.outputs.long }} ./output/meshtasticd_${{ steps.version.outputs.long }}_amd64.deb
           gh release upload --clobber v${{ steps.version.outputs.long }} ./output/meshtasticd-${{ steps.version.outputs.deb }}-src.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
