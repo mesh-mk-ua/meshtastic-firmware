@@ -4,6 +4,8 @@ on:
     - cron: 0 8 * * 1-5
   workflow_dispatch: {}
 
+permissions: read-all
+
 jobs:
   trunk_check:
     name: Trunk Check Upload
@@ -14,6 +16,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Trunk Check
-        uses: trunk-io/trunk-action@782e83f803ca6e369f035d64c6ba2768174ba61b
+        uses: trunk-io/trunk-action@v1
         with:
           trunk-token: ${{ secrets.TRUNK_TOKEN }}
