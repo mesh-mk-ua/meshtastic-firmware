@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # This is a layout for 4MB of flash
 # Name,   Type, SubType, Offset,  Size, Flags

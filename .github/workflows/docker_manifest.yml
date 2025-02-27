@@ -2,9 +2,6 @@ name: Build Docker Multi-Arch Manifest
 
 on:
   workflow_call:
-    secrets:
-      DOCKER_FIRMWARE_TOKEN:
-        required: true
     inputs:
       release_channel:
         description: Release channel to target
@@ -138,17 +135,18 @@ jobs:
             fh.write("\nEOF\n")
         id: tags
 
-      - name: Docker login
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: meshtastic
-          password: ${{ secrets.DOCKER_FIRMWARE_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker meta (Debian)
         id: meta_debian
         uses: docker/metadata-action@v5
         with:
-          images: meshtastic/meshtasticd
+          images: ghcr.io/${{ github.repository_owner }}/meshtasticd
           tags: |
             ${{ steps.tags.outputs.debian }}
           flavor: latest=false
@@ -161,15 +159,15 @@ jobs:
             ${{ steps.meta_debian.outputs.tags }}
           push: true
           sources: |
-            meshtastic/meshtasticd@${{ needs.docker-debian-amd64.outputs.digest }}
-            meshtastic/meshtasticd@${{ needs.docker-debian-arm64.outputs.digest }}
-            meshtastic/meshtasticd@${{ needs.docker-debian-armv7.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-debian-amd64.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-debian-arm64.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-debian-armv7.outputs.digest }}
 
       - name: Docker meta (Alpine)
         id: meta_alpine
         uses: docker/metadata-action@v5
         with:
-          images: meshtastic/meshtasticd
+          images: ghcr.io/${{ github.repository_owner }}/meshtasticd
           tags: |
             ${{ steps.tags.outputs.alpine }}
 
@@ -181,6 +179,6 @@ jobs:
             ${{ steps.meta_alpine.outputs.tags }}
           push: true
           sources: |
-            meshtastic/meshtasticd@${{ needs.docker-alpine-amd64.outputs.digest }}
-            meshtastic/meshtasticd@${{ needs.docker-alpine-arm64.outputs.digest }}
-            meshtastic/meshtasticd@${{ needs.docker-alpine-armv7.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-alpine-amd64.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-alpine-arm64.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-alpine-armv7.outputs.digest }}

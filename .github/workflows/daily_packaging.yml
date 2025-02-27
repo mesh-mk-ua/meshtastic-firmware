@@ -33,19 +33,19 @@ jobs:
         series: [plucky, oracular, noble, jammy]
     uses: ./.github/workflows/package_ppa.yml
     with:
-      ppa_repo: ppa:meshtastic/daily
+      ppa_repo: ppa:mymesh/daily
       series: ${{ matrix.series }}
     secrets: inherit
 
-  package-obs:
-    uses: ./.github/workflows/package_obs.yml
-    with:
-      obs_project: network:Meshtastic:daily
-      series: unstable
-    secrets: inherit
+  #package-obs:
+  #  uses: ./.github/workflows/package_obs.yml
+  #  with:
+  #    obs_project: network:Meshtastic:daily
+  #    series: unstable
+  #  secrets: inherit
 
-  hook-copr:
-    uses: ./.github/workflows/hook_copr.yml
-    with:
-      copr_project: daily
-    secrets: inherit
+  #hook-copr:
+  #  uses: ./.github/workflows/hook_copr.yml
+  #  with:
+  #    copr_project: daily
+  #  secrets: inherit
