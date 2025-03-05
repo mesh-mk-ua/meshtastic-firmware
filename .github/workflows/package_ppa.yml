@@ -28,7 +28,9 @@ jobs:
       build_location: ppa
 
   package-ppa:
-    runs-on: ubuntu-latest
+    runs-on:
+      - ubuntu-latest
+      - self-hosted
     needs: build-debian-src
     steps:
       - name: Checkout code
