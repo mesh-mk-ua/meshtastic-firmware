@@ -592,7 +592,7 @@ void NodeDB::installDefaultConfig(bool preserveKey = false)
     config.security.serial_enabled = true;
     config.security.admin_channel_enabled = false;
     resetRadioConfig(false, true); // This also triggers NodeInfo/Position requests since we're fresh
-    strncpy(config.network.ntp_server, "meshtastic.pool.ntp.org", 32);
+    strncpy(config.network.ntp_server, "ua.pool.ntp.org", 32);
 
 #if (defined(T_DECK) || defined(T_WATCH_S3) || defined(UNPHONE) || defined(PICOMPUTER_S3) || defined(SENSECAP_INDICATOR)) &&     \
     HAS_TFT
@@ -907,7 +907,7 @@ void NodeDB::installDefaultDeviceState()
 #ifdef USERPREFS_CONFIG_OWNER_LONG_NAME
     snprintf(owner.long_name, sizeof(owner.long_name), (const char *)USERPREFS_CONFIG_OWNER_LONG_NAME);
 #else
-    snprintf(owner.long_name, sizeof(owner.long_name), "Meshtastic %04x", getNodeNum() & 0x0ffff);
+    snprintf(owner.long_name, sizeof(owner.long_name), "mesh.mk.ua %04x", getNodeNum() & 0x0ffff);
 #endif
 #ifdef USERPREFS_CONFIG_OWNER_SHORT_NAME
     snprintf(owner.short_name, sizeof(owner.short_name), (const char *)USERPREFS_CONFIG_OWNER_SHORT_NAME);
