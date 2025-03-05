@@ -28,7 +28,7 @@ jobs:
       build_location: ppa
 
   package-ppa:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: build-debian-src
     steps:
       - name: Checkout code
