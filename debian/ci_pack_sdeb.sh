@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-export DEBEMAIL="jbennett@incomsystems.biz"
+export DEBEMAIL="pgp@mesh.net.ua"
 export PLATFORMIO_LIBDEPS_DIR=pio/libdeps
 export PLATFORMIO_PACKAGES_DIR=pio/packages
 export PLATFORMIO_CORE_DIR=pio/core
