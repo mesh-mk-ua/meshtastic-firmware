@@ -329,7 +329,6 @@ jobs:
       - name: Add linux sources to release
         run: |
           gh release upload v${{ steps.version.outputs.long }} ./output/meshtasticd-${{ steps.version.outputs.deb }}-src.zip
-          gh release upload v${{ steps.version.outputs.long }} ./output/platformio-deps-native-${{ steps.version.outputs.long }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
