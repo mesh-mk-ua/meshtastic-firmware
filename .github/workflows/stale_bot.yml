@@ -12,7 +12,7 @@ permissions:
 jobs:
   stale_issues:
     name: Close Stale Issues
-    runs-on: [ubuntu-latest, x64]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Stale PR+Issues
