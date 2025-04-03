@@ -43,17 +43,13 @@ runs:
       id: base
       uses: ./.github/actions/setup-base
 
-    - name: Pull web ui
-      if: inputs.include-web-ui == 'true'
-      run: curl -L https://github.com/meshtastic/web/releases/latest/download/build.tar -o web.tar
-      shell: bash
-
-    - name: Unpack web ui
+    - name: Pull web ui and unpack web ui
       if: inputs.include-web-ui == 'true'
       shell: bash
       run: |
-        tar -xf build.tar -C data/static
-        rm build.tar
+        curl -L https://github.com/meshtastic/web/releases/latest/download/build.tar -o web.tar
+        tar -xf web.tar -C data/static
+        rm web.tar
 
     - name: Remove debug flags for release
       shell: bash
