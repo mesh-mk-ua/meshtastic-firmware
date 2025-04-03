@@ -49,6 +49,7 @@ runs:
       run: |
         curl -L https://github.com/meshtastic/web/releases/latest/download/build.tar -o web.tar
         tar -xf web.tar -C data/static
+        gunzip web/ -r
         rm web.tar
 
     - name: Remove debug flags for release
