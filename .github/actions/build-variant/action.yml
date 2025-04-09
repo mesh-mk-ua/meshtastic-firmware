@@ -43,11 +43,18 @@ runs:
       id: base
       uses: ./.github/actions/setup-base
 
+    - name: Get web ui version
+      if: inputs.include-web-ui == 'true'
+      id: webver
+      shell: bash
+      run: |
+        echo "ver=$(cat bin/web.version)" >> $GITHUB_OUTPUT
+
     - name: Pull web ui and unpack web ui
       if: inputs.include-web-ui == 'true'
       shell: bash
       run: |
-        curl -L https://github.com/meshtastic/web/releases/latest/download/build.tar -o web.tar
+        curl -L https://github.com/meshtastic/web/releases/download/v${{ steps.webver.outputs.ver }}/build.tar -o web.tar
         tar -xf web.tar -C data/static
         gunzip data/static/ -r
         rm web.tar
