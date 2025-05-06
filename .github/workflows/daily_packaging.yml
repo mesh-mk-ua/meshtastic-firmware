@@ -18,7 +18,8 @@ on:
 permissions:
   contents: write
   packages: write
-
+  checks: write
+  
 jobs:
   docker-multiarch:
     uses: ./.github/workflows/docker_manifest.yml
