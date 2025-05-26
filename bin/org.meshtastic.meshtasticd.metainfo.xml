@@ -49,11 +49,11 @@
     <content_attribute id="social-location">intense</content_attribute>
   </content_rating>
 
-  <url type="bugtracker">https://github.com/meshtastic/firmware/issues</url>
+  <url type="bugtracker">https://github.com/mesh-mk-ua/meshtastic-firmware/issues</url>
   <url type="homepage">https://meshtastic.org/</url>
   <url type="donation">https://opencollective.com/meshtastic</url>
   <url type="faq">https://meshtastic.org/docs/software/linux/usage/</url>
-  <url type="vcs-browser">https://github.com/meshtastic/firmware/</url>
+  <url type="vcs-browser">https://github.com/mesh-mk-ua/meshtastic-firmware/</url>
 
   <screenshots>
     <screenshot type="default">
@@ -87,23 +87,26 @@
   </screenshots>
 
   <releases>
+    <release version="2.6.10" date="2025-05-25">
+      <url type="details">https://github.com/mesh-mk-ua/meshtastic-firmware/releases?q=tag%3Av2.6.10</url>
+    </release>
     <release version="2.6.9" date="2025-05-15">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.9</url>
+      <url type="details">https://github.com/mesh-mk-ua/meshtastic-firmware/releases?q=tag%3Av2.6.9</url>
     </release>
     <release version="2.6.8" date="2025-05-05">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.8</url>
+      <url type="details">https://github.com/mesh-mk-ua/meshtastic-firmware/releases?q=tag%3Av2.6.8</url>
     </release>
     <release version="2.6.7" date="2025-04-28">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.7</url>
+      <url type="details">https://github.com/mesh-mk-ua/meshtastic-firmware/releases?q=tag%3Av2.6.7</url>
     </release>
     <release version="2.6.6" date="2025-04-15">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.6</url>
+      <url type="details">https://github.com/mesh-mk-ua/meshtastic-firmware/releases?q=tag%3Av2.6.6</url>
     </release>
     <release version="2.6.5" date="2025-03-30">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.5</url>
+      <url type="details">https://github.com/mesh-mk-ua/meshtastic-firmware/releases?q=tag%3Av2.6.5</url>
     </release>
     <release version="2.6.4" date="2025-03-28">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.4</url>
+      <url type="details">https://github.com/mesh-mk-ua/meshtastic-firmware/releases?q=tag%3Av2.6.4</url>
     </release>
   </releases>
 </component>
