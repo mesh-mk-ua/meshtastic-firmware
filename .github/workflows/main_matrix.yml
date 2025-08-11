@@ -357,6 +357,7 @@ jobs:
       - version
       - gather-artifacts
       - build-debian-src
+      - package-pio-deps-native-tft
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -475,9 +476,10 @@ jobs:
   publish-firmware:
     runs-on: ubuntu-24.04
     if: ${{ github.event_name == 'workflow_dispatch' }}
-    needs: [release-firmware]
+    needs: [release-firmware, version]
     env:
-      targets: esp32,esp32s3,esp32c3,esp32c6,nrf52840,rp2040,stm32
+      targets: |-
+        esp32,esp32s3,esp32c3,esp32c6,nrf52840,rp2040,rp2350,stm32
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -486,10 +488,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.x
-
-      - name: Get release version string
-        run: echo "long=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
-        id: version
 
       - uses: actions/download-artifact@v4
         with:
@@ -504,7 +502,7 @@ jobs:
           DEST_PREFIX: ${{ contains(github.ref_name, 'event/') && format('{0}/', github.ref_name) || '' }}
         with:
           deploy_key: ${{ secrets.DIST_PAGES_DEPLOY_KEY }}
-          external_repository: meshtastic/meshtastic.github.io
+          external_repository: mesh-mk-ua/meshtastic-firmware
           publish_branch: master
           publish_dir: ./publish
           destination_dir: ${{ env.DEST_PREFIX }}firmware-${{ needs.version.outputs.long }}
