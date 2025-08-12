@@ -501,7 +501,7 @@ jobs:
           DEST_PREFIX: ${{ contains(github.ref_name, 'event/') && format('{0}/', github.ref_name) || '' }}
         with:
           deploy_key: ${{ secrets.DIST_PAGES_DEPLOY_KEY }}
-          external_repository: mesh-mk-ua/meshtastic-firmware
+          external_repository: mesh-mk-ua/mymesh.github.io
           publish_branch: master
           publish_dir: ./publish
           destination_dir: ${{ env.DEST_PREFIX }}firmware-${{ needs.version.outputs.long }}
