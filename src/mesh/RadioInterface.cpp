@@ -185,20 +185,6 @@ const RegionInfo regions[] = {
     RDEF(BR_902, 902.0f, 907.5f, 100, 0, 30, true, false, false),
 
     /*
-        Nepal
-        865 MHz to 868 MHz frequency band for IoT (Internet of Things), M2M (Machine-to-Machine), and smart metering use,
-       specifically in non-cellular mode. https://www.nta.gov.np/uploads/contents/Radio-Frequency-Policy-2080-English.pdf
-    */
-    RDEF(NP_865, 865.0f, 868.0f, 100, 0, 30, true, false, false),
-
-    /*
-        Brazil
-        902 - 907.5 MHz , 1W power limit, no duty cycle restrictions
-        https://github.com/meshtastic/firmware/issues/3741
-    */
-    RDEF(BR_902, 902.0f, 907.5f, 100, 0, 30, true, false, false),
-
-    /*
        2.4 GHZ WLAN Band equivalent. Only for SX128x chips.
     */
     RDEF(LORA_24, 2400.0f, 2483.5f, 100, 0, 10, true, false, true),
@@ -349,8 +335,9 @@ uint32_t RadioInterface::getTxDelayMsecWeighted(float snr)
 void printPacket(const char *prefix, const meshtastic_MeshPacket *p)
 {
 #if defined(DEBUG_PORT) && !defined(DEBUG_MUTE)
-    std::string out = DEBUG_PORT.mt_sprintf("%s (id=0x%08x fr=0x%08x to=0x%08x, WantAck=%d, HopLim=%d Ch=0x%x", prefix, p->id,
-                                            p->from, p->to, p->want_ack, p->hop_limit, p->channel);
+    std::string out =
+        DEBUG_PORT.mt_sprintf("%s (id=0x%08x fr=0x%08x to=0x%08x, transport = %u, WantAck=%d, HopLim=%d Ch=0x%x", prefix, p->id,
+                              p->from, p->to, p->transport_mechanism, p->want_ack, p->hop_limit, p->channel);
     if (p->which_payload_variant == meshtastic_MeshPacket_decoded_tag) {
         auto &s = p->decoded;
 
