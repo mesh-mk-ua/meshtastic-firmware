@@ -196,6 +196,13 @@ jobs:
       build_location: local
     secrets: inherit
 
+  package-pio-deps-native-tft:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    uses: ./.github/workflows/package_pio_deps.yml
+    with:
+      pio_env: native-tft
+    secrets: inherit
+
   test-native:
     if: ${{ !contains(github.ref_name, 'event/') }}
     uses: ./.github/workflows/test_native.yml
@@ -357,6 +364,7 @@ jobs:
       - version
       - gather-artifacts
       - build-debian-src
+      - package-pio-deps-native-tft
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -395,6 +403,7 @@ jobs:
         working-directory: output
         run: |
           zip -j -9 -r ./meshtasticd-${{ needs.version.outputs.deb }}-src.zip ./debian-src
+          zip -9 -r ./platformio-deps-native-tft-${{ needs.version.outputs.long }}.zip ./pio-deps-native-tft
 
       # For diagnostics
       - name: Display structure of downloaded files
@@ -405,6 +414,7 @@ jobs:
         if: ${{ github.ref_name == 'master' }}
         run: |
           gh release upload v${{ needs.version.outputs.long }} ./output/meshtasticd-${{ needs.version.outputs.deb }}-src.zip
+          gh release upload v${{ needs.version.outputs.long }} ./output/platformio-deps-native-tft-${{ needs.version.outputs.long }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -494,7 +504,7 @@ jobs:
           merge-multiple: true
           path: ./publish
 
-      - name: Publish firmware to meshtastic.github.io
+      - name: Publish firmware to mymesh.github.io
         uses: peaceiris/actions-gh-pages@v4
         env:
           # On event/* branches, use the event name as the destination prefix
