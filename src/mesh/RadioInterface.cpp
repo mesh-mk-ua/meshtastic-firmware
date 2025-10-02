@@ -32,9 +32,12 @@ const RegionInfo regions[] = {
     RDEF(US, 902.0f, 928.0f, 100, 0, 30, true, false, false),
 
     /*
-        https://lora-alliance.org/wp-content/uploads/2020/11/lorawan_regional_parameters_v1.0.3reva_0.pdf
+        EN300220 ETSI V3.2.1 [Table B.1, Item H, p. 21]
+
+        https://www.etsi.org/deliver/etsi_en/300200_300299/30022002/03.02.01_60/en_30022002v030201p.pdf
+        FIXME: https://github.com/meshtastic/firmware/issues/3371
      */
-    RDEF(EU_433, 433.0f, 434.0f, 10, 0, 12, true, false, false),
+    RDEF(EU_433, 433.0f, 434.0f, 10, 0, 10, true, false, false),
 
     /*
        https://www.thethingsnetwork.org/docs/lorawan/duty-cycle/
@@ -311,16 +314,32 @@ uint32_t RadioInterface::getTxDelayMsecWeightedWorst(float snr)
     return (2 * CWmax * slotTimeMsec) + pow_of_2(CWsize) * slotTimeMsec;
 }
 
+/** Returns true if we should rebroadcast early like a ROUTER */
+bool RadioInterface::shouldRebroadcastEarlyLikeRouter(meshtastic_MeshPacket *p)
+{
+    // If we are a ROUTER, we always rebroadcast early
+    if (config.device.role == meshtastic_Config_DeviceConfig_Role_ROUTER) {
+        return true;
+    }
+
+    // If we are a CLIENT_BASE and the packet is from or to a favorited node, we should rebroadcast early
+    if (config.device.role == meshtastic_Config_DeviceConfig_Role_CLIENT_BASE) {
+        return nodeDB->isFromOrToFavoritedNode(*p);
+    }
+
+    return false;
+}
+
 /** The delay to use when we want to flood a message */
-uint32_t RadioInterface::getTxDelayMsecWeighted(float snr)
+uint32_t RadioInterface::getTxDelayMsecWeighted(meshtastic_MeshPacket *p)
 {
     //  high SNR = large CW size (Long Delay)
     //  low SNR = small CW size (Short Delay)
+    float snr = p->rx_snr;
     uint32_t delay = 0;
     uint8_t CWsize = getCWsize(snr);
     // LOG_DEBUG("rx_snr of %f so setting CWsize to:%d", snr, CWsize);
-    if (config.device.role == meshtastic_Config_DeviceConfig_Role_ROUTER ||
-        config.device.role == meshtastic_Config_DeviceConfig_Role_REPEATER) {
+    if (shouldRebroadcastEarlyLikeRouter(p)) {
         delay = random(0, 2 * CWsize) * slotTimeMsec;
         LOG_DEBUG("rx_snr found in packet. Router: setting tx delay:%d", delay);
     } else {
@@ -654,11 +673,25 @@ void RadioInterface::limitPower(int8_t loraMaxPower)
         power = maxPower;
     }
 
+#ifndef NUM_PA_POINTS
     if (TX_GAIN_LORA > 0) {
         LOG_INFO("Requested Tx power: %d dBm; Device LoRa Tx gain: %d dB", power, TX_GAIN_LORA);
         power -= TX_GAIN_LORA;
     }
+#else
+    // we have an array of PA gain values.  Find the highest power setting that works.
+    const uint16_t tx_gain[NUM_PA_POINTS] = {TX_GAIN_LORA};
+    for (int radio_dbm = 0; radio_dbm < NUM_PA_POINTS; radio_dbm++) {
+        if (((radio_dbm + tx_gain[radio_dbm]) > power) ||
+            ((radio_dbm == (NUM_PA_POINTS - 1)) && ((radio_dbm + tx_gain[radio_dbm]) <= power))) {
+            // we've exceeded the power limit, or hit the max we can do
+            LOG_INFO("Requested Tx power: %d dBm; Device LoRa Tx gain: %d dB", power, tx_gain[radio_dbm]);
+            power -= tx_gain[radio_dbm];
+            break;
+        }
+    }
 
+#endif
     if (power > loraMaxPower) // Clamp power to maximum defined level
         power = loraMaxPower;
 

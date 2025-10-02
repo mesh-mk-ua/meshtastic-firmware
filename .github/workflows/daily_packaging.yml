@@ -19,7 +19,7 @@ permissions:
   contents: write
   packages: write
   checks: write
-  
+
 jobs:
   docker-multiarch:
     uses: ./.github/workflows/docker_manifest.yml
@@ -32,8 +32,8 @@ jobs:
       fail-fast: false
       matrix:
         series:
-          - jammy # 22.04
-          - noble # 24.04
+          - jammy # 22.04 LTS
+          - noble # 24.04 LTS
           - plucky # 25.04
           - questing # 25.10
     uses: ./.github/workflows/package_ppa.yml
