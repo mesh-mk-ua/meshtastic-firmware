@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           submodules: recursive
           ref: ${{ github.ref }}
@@ -31,7 +31,7 @@ jobs:
         env:
           COPR_API_TOKEN_CONFIG: ${{ secrets.COPR_API_CONFIG }}
         with:
-          owner: "@meshtastic"
+          owner: "@mesh-mk-ua"
           package-name: meshtasticd
           project-name: ${{ inputs.copr_project }}
           git-remote: "${{ github.server_url }}/${{ github.repository }}.git"
