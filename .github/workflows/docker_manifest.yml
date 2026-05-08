@@ -2,6 +2,9 @@ name: Build Docker Multi-Arch Manifest
 
 on:
   workflow_call:
+    secrets:
+      DOCKER_FIRMWARE_TOKEN:
+        required: true
     inputs:
       release_channel:
         description: Release channel to target
@@ -9,7 +12,7 @@ on:
         type: string
 
 permissions:
-  contents: write
+  contents: read
   packages: write
 
 jobs:
@@ -36,6 +39,15 @@ jobs:
     with:
       distro: debian
       platform: linux/arm/v7
+      runs-on: ubuntu-24.04-arm
+      push: true
+    secrets: inherit
+
+  docker-debian-riscv64:
+    uses: ./.github/workflows/docker_build.yml
+    with:
+      distro: debian
+      platform: linux/riscv64
       runs-on: ubuntu-24.04-arm
       push: true
     secrets: inherit
@@ -67,24 +79,33 @@ jobs:
       push: true
     secrets: inherit
 
+  docker-alpine-riscv64:
+    uses: ./.github/workflows/docker_build.yml
+    with:
+      distro: alpine
+      platform: linux/riscv64
+      runs-on: ubuntu-24.04-arm
+      push: true
+    secrets: inherit
+
   docker-manifest:
     needs:
       # Debian
       - docker-debian-amd64
       - docker-debian-arm64
       - docker-debian-armv7
+      - docker-debian-riscv64
       # Alpine
       - docker-alpine-amd64
       - docker-alpine-arm64
       - docker-alpine-armv7
+      - docker-alpine-riscv64
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           submodules: recursive
-          ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
 
       - name: Get release version string
         run: |
@@ -135,16 +156,16 @@ jobs:
             fh.write("\nEOF\n")
         id: tags
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: Docker login
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.DOCKER_FIRMWARE_TOKEN }}
 
       - name: Docker meta (Debian)
         id: meta_debian
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository_owner }}/meshtasticd
           tags: |
@@ -162,10 +183,11 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-debian-amd64.outputs.digest }}
             ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-debian-arm64.outputs.digest }}
             ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-debian-armv7.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-debian-riscv64.outputs.digest }}
 
       - name: Docker meta (Alpine)
         id: meta_alpine
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository_owner }}/meshtasticd
           tags: |
@@ -182,3 +204,4 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-alpine-amd64.outputs.digest }}
             ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-alpine-arm64.outputs.digest }}
             ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-alpine-armv7.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/meshtasticd@${{ needs.docker-alpine-riscv64.outputs.digest }}
