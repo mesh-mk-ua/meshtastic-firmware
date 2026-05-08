@@ -142,6 +142,9 @@ jobs:
     uses: ./.github/workflows/test_native.yml
 
   docker:
+    permissions: # Needed for pushing to GHCR.
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
