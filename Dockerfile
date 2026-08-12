@@ -58,7 +58,8 @@ RUN apt-get update && apt-get --no-install-recommends -y install \
         libx11-6 libinput10 libxkbcommon-x11-0 libsdl2-2.0-0 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /var/lib/meshtasticd \
-    && mkdir -p /etc/meshtasticd/config.d
+    && mkdir -p /etc/meshtasticd/config.d \
+    && mkdir -p /etc/meshtasticd/ssl
 
 # Fetch compiled binary from the builder
 COPY --from=builder /tmp/firmware/release/meshtasticd /usr/bin/

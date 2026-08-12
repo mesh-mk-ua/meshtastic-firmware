@@ -22,12 +22,14 @@ permissions:
 
 jobs:
   docker-multiarch:
+    if: github.repository == 'mesh-mk-ua/meshtastic-firmware'
     uses: ./.github/workflows/docker_manifest.yml
     with:
       release_channel: daily
     secrets: inherit
 
   package-ppa:
+    if: github.repository == 'mesh-mk-ua/meshtastic-firmware'
     strategy:
       fail-fast: false
       matrix:
@@ -40,4 +42,19 @@ jobs:
     with:
       ppa_repo: ppa:mymesh/daily
       series: ${{ matrix.series }}
+    secrets: inherit
+
+  package-obs:
+    if: github.repository == 'meshtastic/firmware'
+    uses: ./.github/workflows/package_obs.yml
+    with:
+      obs_project: network:Meshtastic:daily
+      series: unstable
+    secrets: inherit
+
+  hook-copr:
+    if: github.repository == 'meshtastic/firmware'
+    uses: ./.github/workflows/hook_copr.yml
+    with:
+      copr_project: daily
     secrets: inherit

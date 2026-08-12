@@ -49,7 +49,7 @@
     <content_attribute id="social-location">intense</content_attribute>
   </content_rating>
 
-  <url type="bugtracker">https://github.com/mesh-mk-ua/meshtastic-firmware/issues</url>
+  <url type="bugtracker">https://github.com/meshtastic/firmware/issues</url>
   <url type="homepage">https://meshtastic.org/</url>
   <url type="donation">https://opencollective.com/meshtastic</url>
   <url type="faq">https://meshtastic.org/docs/software/linux/usage/</url>

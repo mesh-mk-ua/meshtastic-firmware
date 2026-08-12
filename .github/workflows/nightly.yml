@@ -8,7 +8,7 @@ permissions: read-all
 
 jobs:
   trunk_check:
-    if: github.repository == 'meshtastic/firmware'
+    if: github.repository == 'mesh-mk-ua/meshtastic-firmware'
     name: Trunk Check and Upload
     runs-on: ubuntu-24.04
 
