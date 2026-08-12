@@ -8,7 +8,9 @@ on:
     branches:
       - master
       - develop
+      - pioarduino # Remove when merged // use `feature/` in the future.
       - event/*
+      - feature/*
     paths-ignore:
       - "**.md"
       - version.properties
@@ -17,7 +19,9 @@ on:
     branches:
       - master
       - develop
+      - pioarduino # Remove when merged // use `feature/` in the future.
       - event/*
+      - feature/*
     paths-ignore:
       - "**.md"
       #- "**.yml"
@@ -36,7 +40,7 @@ jobs:
           - check
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
@@ -60,7 +64,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Get release version string
         run: |
           echo "long=$(./bin/buildinfo.py long)" >> $GITHUB_OUTPUT
@@ -79,10 +83,10 @@ jobs:
       matrix:
         check: ${{ fromJson(needs.setup.outputs.check) }}
     # Use 'arctastic' self-hosted runner pool when checking in the main repo
-    runs-on: ${{ github.repository_owner == 'mesh-mk-ua' && 'arctastic' || 'ubuntu-latest' }}
+    runs-on: ${{ github.repository_owner == 'mesh-mk-ua' || 'ubuntu-latest' }}
     if: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'mesh-mk-ua/meshtastic-firmware' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Check ${{ matrix.check.board }}
@@ -185,7 +189,7 @@ jobs:
     needs: [version, build]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v8
         with:
@@ -241,53 +245,11 @@ jobs:
           path: ./*.elf
           retention-days: 30
 
-  shame:
-    if: github.repository == 'mesh-mk-ua/meshtastic-firmware'
-    continue-on-error: true
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@v6
-        if: github.event_name == 'pull_request'
-        with:
-          filter: blob:none # means we download all the git history but none of the commit (except ones with checkout like the head)
-          fetch-depth: 0
-      - name: Download the current manifests
-        uses: actions/download-artifact@v8
-        with:
-          path: ./manifests-new/
-          pattern: manifest-*
-          merge-multiple: true
-      - name: Upload combined manifests for later commit and global stats crunching.
-        uses: actions/upload-artifact@v7
-        id: upload-manifest
-        with:
-          name: manifests-${{ github.sha }}
-          overwrite: true
-          path: manifests-new/*.mt.json
-      - name: Find the merge base
-        if: github.event_name == 'pull_request'
-        run: echo "MERGE_BASE=$(git merge-base "origin/$base" "$head")" >> $GITHUB_ENV
-        env:
-          base: ${{ github.base_ref }}
-          head: ${{ github.sha }}
-      # Currently broken (for-loop through EVERY artifact -- rate limiting)
-      # - name: Download the old manifests
-      #   if: github.event_name == 'pull_request'
-      #   run: gh run download -R "$repo" --name "manifests-$merge_base" --dir manifest-old/
-      #   env:
-      #     GH_TOKEN: ${{ github.token }}
-      #     merge_base: ${{ env.MERGE_BASE }}
-      #     repo: ${{ github.repository }}
-      # - name: Do scan and post comment
-      #   if: github.event_name == 'pull_request'
-      #   run: python3 bin/shame.py ${{ github.event.pull_request.number }} manifests-old/ manifests-new/
-
   release-artifacts:
     permissions: # Needed for 'gh release upload'.
       contents: write
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'meshtastic/firmware' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'mesh-mk-ua/meshtastic-firmware' }}
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     needs:
@@ -299,7 +261,7 @@ jobs:
       # - MacOS
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -399,7 +361,7 @@ jobs:
     needs: [release-artifacts, version]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -454,7 +416,7 @@ jobs:
         esp32,esp32s3,esp32c3,esp32c6,nrf52840,rp2040,rp2350,stm32
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -475,6 +437,13 @@ jobs:
         with:
           pattern: manifest-${{ needs.version.outputs.long }}
           path: ./publish
+
+      - name: Generate release notes
+        run: |
+          chmod +x ./bin/generate_release_notes.py
+          ./bin/generate_release_notes.py ${{ needs.version.outputs.long }} --compare-ref HEAD > ./publish/release_notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish firmware to mymesh.github.io
         uses: peaceiris/actions-gh-pages@v4
